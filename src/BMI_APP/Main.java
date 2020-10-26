@@ -42,6 +42,11 @@ public class Main extends Application {
         calculateButton.setLayoutX(202.0);
         calculateButton.setTranslateY(208.0);
 
+        Label errorLabel = new Label();
+        errorLabel.setFont(Font.font (18));
+        errorLabel.setLayoutX(14.0);
+        errorLabel.setTranslateY(90.0);
+
         Label weightLabel = new Label("Weight:");
         weightLabel.setFont(Font.font (18));
         weightLabel.setLayoutX(14.0);
@@ -87,6 +92,15 @@ public class Main extends Application {
         midLabel.setLayoutX(80.0);
         midLabel.setTranslateY(284.0);
 
+
+        Label bmiMidLabel = new Label();
+        bmiMidLabel.setFont(Font.font (25));
+        bmiMidLabel.setTextAlignment(TextAlignment.CENTER);
+        bmiMidLabel.setLayoutX(70.0);
+        bmiMidLabel.setTranslateY(330);
+        bmiMidLabel.setPrefWidth(260);
+        bmiMidLabel.setWrapText(true);
+
         Label finalResult = new Label();
         finalResult.setFont(Font.font (18));
         finalResult.setTextAlignment(TextAlignment.CENTER);
@@ -106,14 +120,65 @@ public class Main extends Application {
         pane.getChildren().addAll(rectangleTop,rectangleMid,topLabel,calculateButton,weightLabel,heightLabel,
                 tfWeight,tfHeight,choiceBoxWeight, choiceBoxHeight, midLabel, finalResult, resetButton);
 
-        EventHandler<ActionEvent> calculateBMI = new EventHandler<ActionEvent>() {
+       /** EventHandler<ActionEvent> calculateBMI = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
+
                 finalResult.setText("You are in the healthy weight range, but at the higher end. Keep an eye on your weight and try to stay in the healthy range.");
             }
-        };
+        }; */
+
+         EventHandler<ActionEvent> calculateButtonPress = new EventHandler<ActionEvent>() {
+             @Override
+             public void handle(ActionEvent event) {
+
+                 errorLabel.setText(""); //clear error label
+                 try {
+                     Double weight = Double.parseDouble(tfWeight.getText()); //get value of user weight
+                     if (choiceBoxWeight.getValue() == "kg") { //if weight is in KG
+                         weight = convertKgToLbs(weight);     //convert to LBS
+                     }
+
+                     if (weight == 0) { //check if weight is 0
+                         errorLabel.setText("Enter valid number"); //error label
+                     }
+
+                     Double height = Double.parseDouble(tfHeight.getText()); //get value of user height
+                     if (choiceBoxHeight.getValue() == "cm") { //if height is in CM
+                         height = convertCmToIn(height);     //convert to inch
+                     }
+
+                     if (height < 20) { //check if height is 0
+                         errorLabel.setText("Height value too low."); //based on Chandra the shortest in the world.
+                     }
+
+                     Double bmi = calculateBMI(weight, height); //calculate user BMI
+                     resultBMI(bmi,bmiMidLabel, finalResult); //display result to user
+                 } catch (NumberFormatException ex) {
+                     errorLabel.setText("Enter valid number"); //error label
+                     tfHeight.setText(""); //clear height text field
+                     tfHeight.selectAll();
+                     tfHeight.requestFocus();
+                     tfWeight.setText(""); //clear weight text field
+                     tfWeight.selectAll();
+                     tfWeight.requestFocus(); //refocus at weight text field
+                 }
+             }
+         };
 
         // when button is pressed
-        calculateButton.setOnAction(calculateBMI);
+        calculateButton.setOnAction(finalResult.setText("dgd"));
+        //calculateButton.setOnAction(e.); to put enter key
+
+        /**
+         public void resetButtonPressed(ActionEvent event) {
+            errorLabel.setText(""); //clear error label
+            finalResult.setText(""); //clear status
+            tfWeight.setText(""); //clear weight text field
+            tfHeight.setText(""); //clear height text field
+            tfWeight.selectAll();
+            tfWeight.requestFocus(); //refocus at weight text field
+        }
+  */
 
 
         Scene scene = new Scene(pane,windowWidth,windowHeight);
@@ -142,36 +207,43 @@ button3.addEventHandler(MouseEvent.MOUSE_EXITED,
         }
 });
  * @return*/
-public Double calculateBMI(String weight, String height) {
-    return Double.parseDouble(weight) / (Double.parseDouble(height) * Double.parseDouble(height));
-}
-/**
-    public void resultBMI(Double bmi) {
-       // bmiValueLabel.setText(bmiValue); //set BMI value
 
+public Double calculateBMI(Double weight, Double height) {
+    return weight / (height * height);
+}
+
+    public Double convertKgToLbs(Double kg) {
+        double val = 2.20462262;
+
+        return kg * val; //1 KG = 2.20462262 LBS
+    }
+
+    /**
+     * Converts centimeter to inch
+     * @param cm
+     * @return converted value from cm to inch
+     */
+    public Double convertCmToIn(Double cm) {
+        double val = 0.393701;
+
+        return cm * val; //1 CM = 0.393701 IN
+    }
+
+    public void resultBMI(Double bmi, Label bmiMidLabel, Label finalResult) {
+       // bmiValueLabel.setText(bmiValue); //set BMI value
+        bmiMidLabel.setText(String.valueOf(bmi));
         if(bmi < 18.5) {
-            statusLabel.setText("Underweight");
-            bmiRangeLabel.setText("( BMI < 18.5)");
+            finalResult.setText("Underweight");
         }
-        else if(bmi >= 18.5 && bmi<= 24.9) {
-            statusLabel.setText("Normal weight");
-            bmiRangeLabel.setText("(BMI 18.5 - 24.9)");
+        else if(bmi >= 18.5 && bmi < 25) {
+            finalResult.setText("Normal weight");
         }
-        else if(bmi >= 25 && bmi <= 29.9) {
-            statusLabel.setText("Overweight");
-            bmiRangeLabel.setText("(BMI 25.0 - 29.9)");
+        else if(bmi >= 25 && bmi < 30) {
+            finalResult.setText("Overweight");
         }
-        else if(bmi > 29.9) {
-            statusLabel.setText("Overweight");
-            bmiRangeLabel.setText("(BMI > 30)");
+        else finalResult.setText("Obese");
         }
-        else {
-            //if does not fall in category then set value to empty string
-            bmiValueLabel.setText("");
-            statusLabel.setText("");
-            bmiRangeLabel.setText("");
-        }
- */
+
     public static void main(String[] args) {
         launch(args);
     }
