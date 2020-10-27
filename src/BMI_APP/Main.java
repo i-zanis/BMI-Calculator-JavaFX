@@ -31,6 +31,7 @@ public class Main extends Application {
         Pane pane = new Pane();
         pane.setPrefSize(windowWidth, windowHeight);
 
+        Rectangle rectangleBase = new Rectangle(windowWidth, windowHeight, Color.WHITE);
         Rectangle rectangleTop = new Rectangle(windowWidth, windowHeight / 10f, Color.BLACK);
         Rectangle rectangleMid = new Rectangle(windowWidth, windowHeight / 11f, Color.BLACK);
         rectangleMid.setY(278);
@@ -96,7 +97,7 @@ public class Main extends Application {
 
 
         // Results Partition
-        Label midLabel = new Label("BMI Results");
+        Label midLabel = new Label("BMI Result");
         midLabel.setFont(Font.font("Bauhaus 93", 30));
         midLabel.setTextFill(Color.WHITE);
         midLabel.setAlignment(Pos.CENTER);
@@ -106,19 +107,19 @@ public class Main extends Application {
 
 
         Label finalResult = new Label();
-        finalResult.setFont(Font.font("Bauhaus 93", FontWeight.BOLD, 30));
+        finalResult.setFont(Font.font("Arial", FontWeight.BOLD, 25));
         finalResult.setTextFill(Color.BLACK);
         finalResult.setAlignment(Pos.CENTER);
         finalResult.setTextAlignment(TextAlignment.CENTER);
-        finalResult.setLayoutX(140);
-        finalResult.setTranslateY(330);
+        finalResult.setLayoutX(80);
+        finalResult.setTranslateY(335);
 
         Label bmiMessage = new Label();
         bmiMessage.setFont(Font.font(15));
         bmiMessage.setTextFill(Color.BLACK);
         bmiMessage.setTextAlignment(TextAlignment.CENTER);
         bmiMessage.setLayoutX(50.0);
-        bmiMessage.setTranslateY(380);
+        bmiMessage.setTranslateY(385);
         bmiMessage.setPrefWidth(260);
         bmiMessage.setWrapText(true);
 
@@ -131,7 +132,7 @@ public class Main extends Application {
         resetButton.setVisible(false);
 
 
-        pane.getChildren().addAll(rectangleTop, rectangleMid, topLabel, errorLabel, calculateButton, weightLabel, heightLabel,
+        pane.getChildren().addAll(rectangleBase, rectangleTop, rectangleMid, topLabel, errorLabel, calculateButton, weightLabel, heightLabel,
                 tfWeight, tfHeight, choiceBoxWeight, choiceBoxHeight, midLabel, finalResult, bmiMessage, resetButton);
 
 
@@ -166,12 +167,13 @@ public class Main extends Application {
                     resultBMI(bmi, finalResult, bmiMessage); //display result to user
                     resetButton.setVisible(true);
                 } catch (NumberFormatException ex) {
-                    errorLabel.setText("Enter valid number."); //error label
+                    errorLabel.setText("Enter valid number.gdfg"); //error label
                     tfHeight.setText(""); //clear height text field
                     tfHeight.requestFocus();
                     tfWeight.setText(""); //clear weight text field
                     tfWeight.requestFocus(); //refocus at weight text field
-                } catch (ArithmeticException ex) {
+                }
+                catch (ArithmeticException ex) {
                     errorLabel.setText("The height cannot be zero."); //error label
                     tfHeight.setText(""); //clear height text field
                     tfHeight.requestFocus();
@@ -233,7 +235,7 @@ public class Main extends Application {
      * and bmiMessage label in the middle of second half of the screen.
      */
     public void resultBMI(Double bmi, Label finalResult, Label bmiMessage) {
-        finalResult.setText(String.format("%-2.1f", bmi));
+        finalResult.setText(String.format("Your BMI is %-2.1f", bmi));
         // finalResult.setText(bmi.toString());
         if (bmi < 18.5) {
             bmiMessage.setText("Your result suggests that you are underweight.");
