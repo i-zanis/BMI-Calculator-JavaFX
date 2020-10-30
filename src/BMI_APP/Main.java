@@ -232,7 +232,7 @@ public class Main extends Application {
     }
 
     /**
-     * Calculates the BMI from user input using Imperial System Formula
+     * Calculates the BMI from user input using Imperial System Formula.
      */
     public Double calculateBMI(Double weight, Double height) {
         return weight / (height * height) * 703.0; //703 conversion factor for imperial
@@ -246,7 +246,7 @@ public class Main extends Application {
     }
 
     /**
-     * Converts CM to Inches as the formula is for imperial system
+     * Converts CM to Inches as the formula is for imperial system.
      */
     public Double convertCmToIn(Double cm) {
         return cm * 0.393701;  //1 CM = 0.393701 IN
