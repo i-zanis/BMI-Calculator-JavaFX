@@ -49,7 +49,9 @@ public class Main extends Application {
 
         // Settings for Calculate button
         Button calculateButton = new Button("Calculate");
-        calculateButton.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 25;");
+        calculateButton.setStyle("-fx-focus-color: black; -fx-faint-focus-color: black; -fx-inner-border: white; " +
+                "-fx-background-color: black -fx-faint-focus-color, " +
+                "-fx-focus-color, -fx-inner-border;");
         calculateButton.setFont(Font.font("Bauhaus 93", 20));
         calculateButton.setLayoutX(202.0);
         calculateButton.setTranslateY(208.0);
@@ -78,7 +80,7 @@ public class Main extends Application {
         tfWeight.setFont(Font.font(12));
         tfWeight.setLayoutX(107.0);
         tfWeight.setTranslateY(118.0);
-        tfWeight.setStyle("-fx-background-radius: 8;");
+        tfWeight.setStyle("-fx-focus-color: black; -fx-background-radius: 15; -fx-border-radius: 0.1;");
         tfWeight.setPromptText("Enter weight"); // gray text implying input
 
         // Settings for TextField next to heightLabel
@@ -86,7 +88,7 @@ public class Main extends Application {
         tfHeight.setFont(Font.font(12));
         tfHeight.setLayoutX(107.0);
         tfHeight.setTranslateY(158.0);
-        tfHeight.setStyle("-fx-background-radius: 8;");
+        tfHeight.setStyle("-fx-focus-color: black; -fx-background-radius: 15; -fx-border-radius: 0.1;");
         tfHeight.setPromptText("Enter height"); // gray text implying input
 
         // Settings for Options for height Imperial/Metric on the right of tfWeight
@@ -131,17 +133,19 @@ public class Main extends Application {
 
         // Settings for displayed suggesting message under finalResult
         Label bmiMessage = new Label();
-        bmiMessage.setFont(Font.font(15));
+        bmiMessage.setFont(Font.font("Arial", FontWeight.BOLD, 15));
         bmiMessage.setTextFill(Color.BLACK);
         bmiMessage.setTextAlignment(TextAlignment.CENTER);
         bmiMessage.setLayoutX(50.0);
-        bmiMessage.setTranslateY(385);
+        bmiMessage.setTranslateY(380);
         bmiMessage.setPrefWidth(260);
         bmiMessage.setWrapText(true);
 
         // Settings for resetButton that appears after calculateButton is pressed
         Button resetButton = new Button("Reset");
-        resetButton.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 25;");
+        resetButton.setStyle("-fx-focus-color: black; -fx-faint-focus-color: black; -fx-inner-border: white; " +
+                "-fx-background-color: black -fx-faint-focus-color, " +
+                "-fx-focus-color, -fx-inner-border;");
         resetButton.setFont(Font.font("Bauhaus 93", 20));
         resetButton.setLayoutX(224.0);
         resetButton.setTranslateY(450.0);
@@ -186,7 +190,7 @@ public class Main extends Application {
                     resultBMI(bmi, finalResult, bmiMessage); //display result to user
                     resetButton.setVisible(true);
                 } catch (NumberFormatException ex) {
-                    errorLabel.setText("Enter valid number.gdfg"); //error label
+                    errorLabel.setText("Enter valid number."); //error label
                     tfHeight.setText(""); //clear height text field
                     tfHeight.requestFocus();
                     tfWeight.setText(""); //clear weight text field
