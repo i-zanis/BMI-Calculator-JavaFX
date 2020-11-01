@@ -36,7 +36,7 @@ import javafx.stage.Stage;
  * Please download "javafx-sdk-11.0" and add all the jar-files in
  * Javafx-sdk-11.0.2\lib\ to the global library.
  * VM options --module-path %java path% --add-modules javafx.controls,javafx.fxml
- * 
+ *
  * Thank you for your patience.
  */
 
@@ -191,61 +191,58 @@ public class Main extends Application {
         // Start of Event settings for buttons
 
         // Event handler for the calculateButton
-        EventHandler<ActionEvent> calculateButtonPress = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent Event) {
-                errorLabel.setText(""); //clear error label
-                // to control displaying of large decimals on unrealistic/incorrect weight/height inputs that take space
-                boolean proceed = true;
-                try {
-                    Double weight = Double.parseDouble(tfWeight.getText()); // get weight from TextField
-                    if (choiceBoxWeight.getValue().equals("kg")) {          // if weight is in KG
-                        weight = convertKgToLbs(weight);                    // base bmi formula is in imperial
-                    }
-
-                    if (weight == 0) { //check if weight is 0
-                        errorLabel.setText("The weight cannot be zero."); //errorLabel
-                        tfWeight.setText("");    // clear weight TextField
-                        tfWeight.requestFocus(); // goes back to weight TextField
-                    }
-                    //slightly larger than Jon Brower Minnoch the heaviest in the world in pounds.
-                    if (weight > 1000) {
-                        errorLabel.setText("Weight value too high."); //errorLabel
-                        tfWeight.setText("");    // clear height TextField
-                        tfWeight.requestFocus(); // goes back to weight TextField
-                        // to prevent displaying large decimal number of BMI on high weight on incorrect inputs
-                        proceed = false;
-                    }
-                    Double height = Double.parseDouble(tfHeight.getText()); //get height from TextField
-                    if (choiceBoxHeight.getValue().equals("cm")) { // if height is in CM
-                        height = convertCmToIn(height);            // base bmi formula is in imperial
-                    }
-                    // control the display of numbers with many digits that don't fit in the window
-                    if (height < 22) {
-                        errorLabel.setText("Height value too low."); // based on Chandra the shortest in the world.
-                        tfHeight.setText("");                        // clear height text field
-                        tfHeight.requestFocus();                     // goes back to height TextField
-                        // to prevent displaying large decimal number of BMI on low height on incorrect inputs
-                        proceed = false;
-                    }
-                    if (height == 0.0) throw new ArithmeticException(); // to prevent displaying infinity in finalResult
-                    // to control displaying of large decimals that take space
-                    if (proceed) {
-                        Double bmi = calculateBMI(weight, height);// calculate user BMI
-                        resultBMI(bmi, finalResult, bmiMessage);  // display result to user
-                        resetButton.setVisible(true);             // reveals the resetButton when calculate is pressed
-                    }
-                } catch (NumberFormatException ex) {
-                    errorLabel.setText("Enter a valid number."); // errorLabel
-                    tfHeight.setText("");                        // clear height TextField
-                    tfHeight.requestFocus();                     // goes back to the height TextField
-                    tfWeight.setText("");                        // clear weight TextField
-                    tfWeight.requestFocus();                     // goes back to the weight TextField
-                } catch (ArithmeticException ex) {
-                    errorLabel.setText("The height cannot be zero."); // errorLabel
-                    tfHeight.setText("");                             // clear height TextField
-                    tfHeight.requestFocus();                          // goes back to the height TextField
+        EventHandler<ActionEvent> calculateButtonPress = Event -> {
+            errorLabel.setText(""); //clear error label
+            // to control displaying of large decimals on unrealistic/incorrect weight/height inputs that take space
+            boolean proceed = true;
+            try {
+                Double weight = Double.parseDouble(tfWeight.getText()); // get weight from TextField
+                if (choiceBoxWeight.getValue().equals("kg")) {          // if weight is in KG
+                    weight = convertKgToLbs(weight);                    // base bmi formula is in imperial
                 }
+
+                if (weight == 0) { //check if weight is 0
+                    errorLabel.setText("The weight cannot be zero."); //errorLabel
+                    tfWeight.setText("");    // clear weight TextField
+                    tfWeight.requestFocus(); // goes back to weight TextField
+                }
+                //slightly larger than Jon Brower Minnoch the heaviest in the world in pounds.
+                if (weight > 1000) {
+                    errorLabel.setText("Weight value too high."); //errorLabel
+                    tfWeight.setText("");    // clear height TextField
+                    tfWeight.requestFocus(); // goes back to weight TextField
+                    // to prevent displaying large decimal number of BMI on high weight on incorrect inputs
+                    proceed = false;
+                }
+                Double height = Double.parseDouble(tfHeight.getText()); //get height from TextField
+                if (choiceBoxHeight.getValue().equals("cm")) { // if height is in CM
+                    height = convertCmToIn(height);            // base bmi formula is in imperial
+                }
+                // control the display of numbers with many digits that don't fit in the window
+                if (height < 22) {
+                    errorLabel.setText("Height value too low."); // based on Chandra the shortest in the world.
+                    tfHeight.setText("");                        // clear height text field
+                    tfHeight.requestFocus();                     // goes back to height TextField
+                    // to prevent displaying large decimal number of BMI on low height on incorrect inputs
+                    proceed = false;
+                }
+                if (height == 0.0) throw new ArithmeticException(); // to prevent displaying infinity in finalResult
+                // to control displaying of large decimals that take space
+                if (proceed) {
+                    Double bmi = calculateBMI(weight, height);// calculate user BMI
+                    resultBMI(bmi, finalResult, bmiMessage);  // display result to user
+                    resetButton.setVisible(true);             // reveals the resetButton when calculate is pressed
+                }
+            } catch (NumberFormatException ex) {
+                errorLabel.setText("Enter a valid number."); // errorLabel
+                tfHeight.setText("");                        // clear height TextField
+                tfHeight.requestFocus();                     // goes back to the height TextField
+                tfWeight.setText("");                        // clear weight TextField
+                tfWeight.requestFocus();                     // goes back to the weight TextField
+            } catch (ArithmeticException ex) {
+                errorLabel.setText("The height cannot be zero."); // errorLabel
+                tfHeight.setText("");                             // clear height TextField
+                tfHeight.requestFocus();                          // goes back to the height TextField
             }
         };
 
@@ -266,24 +263,21 @@ public class Main extends Application {
         );
 
         // Event handler for resetButton
-        EventHandler<ActionEvent> resetButtonPress = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                errorLabel.setText("");  // clear errorLabel
-                finalResult.setText(""); // clear height TextField
-                bmiMessage.setText("");  // clear bmiMessage text
-                tfWeight.setText("");    // clear weight TextField
-                tfHeight.setText("");    // clear height TextField
-                tfWeight.requestFocus(); // goes back at weight TextField
+        EventHandler<ActionEvent> resetButtonPress = event -> {
+            errorLabel.setText("");  // clear errorLabel
+            finalResult.setText(""); // clear height TextField
+            bmiMessage.setText("");  // clear bmiMessage text
+            tfWeight.setText("");    // clear weight TextField
+            tfHeight.setText("");    // clear height TextField
+            tfWeight.requestFocus(); // goes back at weight TextField
 
-            }
         };
 
         // Setting event source objects
         // calculate button on press
         calculateButton.setOnAction(calculateButtonPress);
 
-        // resetButton when press
+        // resetButton on press
         resetButton.setOnAction(resetButtonPress);
 
         // End of Event settings for buttons
