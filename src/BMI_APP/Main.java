@@ -1,5 +1,4 @@
 package BMI_APP;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -7,6 +6,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -44,7 +45,7 @@ public class Main extends Application {
         topLabel.setFont(Font.font("Bauhaus 93", 30));
         topLabel.setTextFill(Color.WHITE);
         topLabel.setTextAlignment(TextAlignment.RIGHT);
-        topLabel.setLayoutX(72.0);
+        topLabel.setLayoutX(69.0);
         topLabel.setTranslateY(9.0);
 
         // Settings for Calculate button
@@ -119,7 +120,7 @@ public class Main extends Application {
         midLabel.setTextFill(Color.WHITE);
         midLabel.setAlignment(Pos.CENTER);
         midLabel.setTextAlignment(TextAlignment.CENTER);
-        midLabel.setLayoutX(95.0);
+        midLabel.setLayoutX(103.0);
         midLabel.setTranslateY(284.0);
 
         // Settings for finalResult label under midLabel -shows final BMI result
@@ -161,20 +162,30 @@ public class Main extends Application {
         // Event handler for the calculateButton
         EventHandler<ActionEvent> calculateButtonPress = new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent Event) {
                 errorLabel.setText(""); //clear error label
+                // to control displaying of large decimals on unrealistic/incorrect weight/height inputs that take space
+                boolean proceed = true;
                 try {
                     Double weight = Double.parseDouble(tfWeight.getText()); //get value of user weight
                     if (choiceBoxWeight.getValue() == "kg") { //if weight is in KG
                         weight = convertKgToLbs(weight);     //base bmi formula is in imperial
                     }
+
                     if (weight == 0) { //check if weight is 0
                         errorLabel.setText("The weight cannot be zero."); //error label
                         tfWeight.setText(""); //clear weight text field
                         tfWeight.requestFocus(); //refocus at weight text field
                     }
-
-                    Double height = Double.parseDouble(tfHeight.getText()); //get value of user height
+                    //slightly larger than Jon Brower Minnoch the heaviest in the world in pounds.
+                    if (weight > 1000) {
+                        errorLabel.setText("Weight value too high.");
+                        tfWeight.setText(""); //clear height text field
+                        tfWeight.requestFocus();
+                        proceed = false; // to prevent displaying large decimal number of BMI on high weight on
+                        // incorrect inputs
+                    }
+                        Double height = Double.parseDouble(tfHeight.getText()); //get value of user height
                     if (choiceBoxHeight.getValue() == "cm") { //if height is in CM
                         height = convertCmToIn(height);    //base bmi formula is in imperial
                     }
@@ -183,14 +194,18 @@ public class Main extends Application {
                         errorLabel.setText("Height value too low."); //based on Chandra the shortest in the world.
                         tfHeight.setText(""); //clear height text field
                         tfHeight.requestFocus();
+                        proceed = false; // to prevent  displaying large decimal number of BMI on low height on
+                                         // incorrect inputs
                     }
                     if (height == 0.0) throw new ArithmeticException(); // to prevent displaying infinity in finalResult
 
-                    Double bmi = calculateBMI(weight, height); //calculate user BMI
-                    resultBMI(bmi, finalResult, bmiMessage); //display result to user
-                    resetButton.setVisible(true);
+                    if (proceed) {
+                        Double bmi = calculateBMI(weight, height); //calculate user BMI
+                        resultBMI(bmi, finalResult, bmiMessage); //display result to user
+                        resetButton.setVisible(true);
+                    }
                 } catch (NumberFormatException ex) {
-                    errorLabel.setText("Enter valid number."); //error label
+                    errorLabel.setText("Enter a valid number."); //error label
                     tfHeight.setText(""); //clear height text field
                     tfHeight.requestFocus();
                     tfWeight.setText(""); //clear weight text field
@@ -203,6 +218,22 @@ public class Main extends Application {
                 }
             }
         };
+
+        // Pressing enter will move to the next Textfield (tfHeight)
+        tfWeight.setOnKeyPressed(event -> {
+                    if (event.getCode().equals(KeyCode.ENTER)) {
+                        tfHeight.requestFocus();
+                    }
+                }
+        );
+
+        // Pressing enter will fire the calculateButton
+        tfHeight.setOnKeyPressed(event -> {
+                    if (event.getCode().equals(KeyCode.ENTER)) {
+                        calculateButton.fire();
+                    }
+                }
+        );
 
         // Event handler for resetButton
         EventHandler<ActionEvent> resetButtonPress = new EventHandler<ActionEvent>() {
@@ -219,8 +250,10 @@ public class Main extends Application {
         };
 
         // Setting event source objects
+        // calculate button on press
         calculateButton.setOnAction(calculateButtonPress);
-        //to put enter key
+
+        // resetButton when press
         resetButton.setOnAction(resetButtonPress);
 
         // End of Event settings for buttons
@@ -228,6 +261,7 @@ public class Main extends Application {
         Scene scene = new Scene(pane, windowWidth, windowHeight);
         //Parent root = FXMLLoader.load(getClass().getResource("BMI.fxml"));
         primaryStage.setTitle("BMI Calculator");
+        primaryStage.getIcons().add(new Image("BMI_APP/bmiIcon.png"));
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
