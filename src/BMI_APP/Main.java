@@ -1,4 +1,5 @@
 package BMI_APP;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -7,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -16,6 +18,27 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * BMI Calculator application created in JavaFX.
+ * Created non-standard for educational purposes without FXML/Scene Builder - Gluon.
+ * Excuse me for the CSS, it should have been in a separate file but I ran out of time.
+ * Find the Halloween Egg.
+
+ *  Name:          Ioannis Lafazanis
+ *  Student ID:    21425229
+ *  Course Code:   CP40061E - Programming
+ *  Date:          11/01/2020
+ *  Project Name:  Practical Activity 2
+ *  Module Leader: Dr Ikram Ur Rehman
+ *  Time Spent:    30-35 hours counted by RescueTime
+ *
+ * Made on OpenJDK14.
+ * Please download "javafx-sdk-11.0" and add all the jar-files in
+ * Javafx-sdk-11.0.2\lib\ to the global library.
+ * VM options --module-path %java path% --add-modules javafx.controls,javafx.fxml
+ * 
+ * Thank you for your patience.
+ */
 
 public class Main extends Application {
 
@@ -50,10 +73,12 @@ public class Main extends Application {
 
         // Settings for Calculate button
         Button calculateButton = new Button("Calculate");
+        // remove the default focus(blue glow) on button press
         calculateButton.setStyle("-fx-focus-color: black; -fx-faint-focus-color: black; -fx-inner-border: white; " +
                 "-fx-background-color: black -fx-faint-focus-color, " +
                 "-fx-focus-color, -fx-inner-border;");
         calculateButton.setFont(Font.font("Bauhaus 93", 20));
+        calculateButton.setTooltip(new Tooltip("Press to calculate your BMI.")); // mouseover tooltip
         calculateButton.setLayoutX(202.0);
         calculateButton.setTranslateY(208.0);
 
@@ -73,42 +98,47 @@ public class Main extends Application {
         // Settings for label displaying "Height" on the left
         Label heightLabel = new Label("Height:");
         heightLabel.setFont(Font.font(18));
-        heightLabel.setLayoutX(26.0);
+        heightLabel.setLayoutX(24.0);
         heightLabel.setTranslateY(158.0);
 
         // Settings for TextField next to weightLabel
         TextField tfWeight = new TextField();
         tfWeight.setFont(Font.font(12));
+        // weaken default(blue glow) focus to match the app's colors
+        tfWeight.setStyle("-fx-focus-color: black; -fx-background-radius: 15;");
         tfWeight.setLayoutX(107.0);
         tfWeight.setTranslateY(118.0);
-        tfWeight.setStyle("-fx-focus-color: black; -fx-background-radius: 15; -fx-border-radius: 0.1;");
         tfWeight.setPromptText("Enter weight"); // gray text implying input
 
         // Settings for TextField next to heightLabel
         TextField tfHeight = new TextField();
+        // weaken default(blue glow) focus to match the app's colors
+        tfHeight.setStyle("-fx-focus-color: black; -fx-background-radius: 15;");
         tfHeight.setFont(Font.font(12));
         tfHeight.setLayoutX(107.0);
         tfHeight.setTranslateY(158.0);
-        tfHeight.setStyle("-fx-focus-color: black; -fx-background-radius: 15; -fx-border-radius: 0.1;");
         tfHeight.setPromptText("Enter height"); // gray text implying input
 
         // Settings for Options for height Imperial/Metric on the right of tfWeight
         ChoiceBox<String> choiceBoxWeight = new ChoiceBox<>(FXCollections.observableArrayList("lbs", "kg"));
         choiceBoxWeight.setValue("lbs"); // set initial value to lbs
-        choiceBoxWeight.setTooltip(new Tooltip("Select Metric or Imperial system."));
-        choiceBoxWeight.setLayoutX(272);
-        choiceBoxWeight.setTranslateY(118);
         choiceBoxWeight.setStyle("-fx-background-color: white; -fx-border-color: #0a151b #0a151b; " +
                 "-fx-border-radius: 8; -fx-pref-width: 45;");
+        choiceBoxWeight.setTooltip(new Tooltip("Select Metric or Imperial system.")); // mouseover tooltip
+        choiceBoxWeight.setLayoutX(272);
+        choiceBoxWeight.setTranslateY(118);
+
 
         // Settings for Options for height Imperial/Metric on the right of tfHeight
         ChoiceBox<String> choiceBoxHeight = new ChoiceBox<>(FXCollections.observableArrayList("in", "cm"));
         choiceBoxHeight.setValue("in");    // set initial value to inch
-        choiceBoxHeight.setTooltip(new Tooltip("Select Metric or Imperial system."));
-        choiceBoxHeight.setLayoutX(272);
-        choiceBoxHeight.setTranslateY(158.0);
         choiceBoxHeight.setStyle("-fx-background-color: white; -fx-border-color: #0a151b #0a151b; " +
                 "-fx-border-radius: 8; -fx-pref-width: 45;");
+        choiceBoxHeight.setTooltip(new Tooltip("Select Metric or Imperial system.")); // mouseover tooltip
+        choiceBoxHeight.setLayoutX(272);
+        choiceBoxHeight.setTranslateY(158.0);
+
+
         // End of Settings for top partition
 
 
@@ -148,12 +178,13 @@ public class Main extends Application {
                 "-fx-background-color: black -fx-faint-focus-color, " +
                 "-fx-focus-color, -fx-inner-border;");
         resetButton.setFont(Font.font("Bauhaus 93", 20));
+        resetButton.setTooltip(new Tooltip("Press to reset all fields.")); // mouseover tooltip
         resetButton.setLayoutX(224.0);
         resetButton.setTranslateY(450.0);
         resetButton.setVisible(false);
         // End of second partition Settings "Results"
 
-        // Addition of all nodes to pane. New nodes won't display if not added here
+        // Add all nodes to pane. New nodes won't display if not added here
         pane.getChildren().addAll(rectangleBase, rectangleTop, rectangleMid, topLabel, errorLabel, calculateButton, weightLabel, heightLabel,
                 tfWeight, tfHeight, choiceBoxWeight, choiceBoxHeight, midLabel, finalResult, bmiMessage, resetButton);
 
@@ -167,62 +198,61 @@ public class Main extends Application {
                 // to control displaying of large decimals on unrealistic/incorrect weight/height inputs that take space
                 boolean proceed = true;
                 try {
-                    Double weight = Double.parseDouble(tfWeight.getText()); //get value of user weight
-                    if (choiceBoxWeight.getValue() == "kg") { //if weight is in KG
-                        weight = convertKgToLbs(weight);     //base bmi formula is in imperial
+                    Double weight = Double.parseDouble(tfWeight.getText()); // get weight from TextField
+                    if (choiceBoxWeight.getValue().equals("kg")) {          // if weight is in KG
+                        weight = convertKgToLbs(weight);                    // base bmi formula is in imperial
                     }
 
                     if (weight == 0) { //check if weight is 0
-                        errorLabel.setText("The weight cannot be zero."); //error label
-                        tfWeight.setText(""); //clear weight text field
-                        tfWeight.requestFocus(); //refocus at weight text field
+                        errorLabel.setText("The weight cannot be zero."); //errorLabel
+                        tfWeight.setText("");    // clear weight TextField
+                        tfWeight.requestFocus(); // goes back to weight TextField
                     }
                     //slightly larger than Jon Brower Minnoch the heaviest in the world in pounds.
                     if (weight > 1000) {
-                        errorLabel.setText("Weight value too high.");
-                        tfWeight.setText(""); //clear height text field
-                        tfWeight.requestFocus();
-                        proceed = false; // to prevent displaying large decimal number of BMI on high weight on
-                        // incorrect inputs
+                        errorLabel.setText("Weight value too high."); //errorLabel
+                        tfWeight.setText("");    // clear height TextField
+                        tfWeight.requestFocus(); // goes back to weight TextField
+                        // to prevent displaying large decimal number of BMI on high weight on incorrect inputs
+                        proceed = false;
                     }
-                        Double height = Double.parseDouble(tfHeight.getText()); //get value of user height
-                    if (choiceBoxHeight.getValue() == "cm") { //if height is in CM
-                        height = convertCmToIn(height);    //base bmi formula is in imperial
+                    Double height = Double.parseDouble(tfHeight.getText()); //get height from TextField
+                    if (choiceBoxHeight.getValue().equals("cm")) { // if height is in CM
+                        height = convertCmToIn(height);            // base bmi formula is in imperial
                     }
-
-                    if (height < 20) { //check if height is 0
-                        errorLabel.setText("Height value too low."); //based on Chandra the shortest in the world.
-                        tfHeight.setText(""); //clear height text field
-                        tfHeight.requestFocus();
-                        proceed = false; // to prevent  displaying large decimal number of BMI on low height on
-                                         // incorrect inputs
+                    // control the display of numbers with many digits that don't fit in the window
+                    if (height < 22) {
+                        errorLabel.setText("Height value too low."); // based on Chandra the shortest in the world.
+                        tfHeight.setText("");                        // clear height text field
+                        tfHeight.requestFocus();                     // goes back to height TextField
+                        // to prevent displaying large decimal number of BMI on low height on incorrect inputs
+                        proceed = false;
                     }
                     if (height == 0.0) throw new ArithmeticException(); // to prevent displaying infinity in finalResult
-
+                    // to control displaying of large decimals that take space
                     if (proceed) {
-                        Double bmi = calculateBMI(weight, height); //calculate user BMI
-                        resultBMI(bmi, finalResult, bmiMessage); //display result to user
-                        resetButton.setVisible(true);
+                        Double bmi = calculateBMI(weight, height);// calculate user BMI
+                        resultBMI(bmi, finalResult, bmiMessage);  // display result to user
+                        resetButton.setVisible(true);             // reveals the resetButton when calculate is pressed
                     }
                 } catch (NumberFormatException ex) {
-                    errorLabel.setText("Enter a valid number."); //error label
-                    tfHeight.setText(""); //clear height text field
-                    tfHeight.requestFocus();
-                    tfWeight.setText(""); //clear weight text field
-                    tfWeight.requestFocus(); //refocus at weight text field
-                }
-                catch (ArithmeticException ex) {
-                    errorLabel.setText("The height cannot be zero."); //error label
-                    tfHeight.setText(""); //clear height text field
-                    tfHeight.requestFocus();
+                    errorLabel.setText("Enter a valid number."); // errorLabel
+                    tfHeight.setText("");                        // clear height TextField
+                    tfHeight.requestFocus();                     // goes back to the height TextField
+                    tfWeight.setText("");                        // clear weight TextField
+                    tfWeight.requestFocus();                     // goes back to the weight TextField
+                } catch (ArithmeticException ex) {
+                    errorLabel.setText("The height cannot be zero."); // errorLabel
+                    tfHeight.setText("");                             // clear height TextField
+                    tfHeight.requestFocus();                          // goes back to the height TextField
                 }
             }
         };
 
-        // Pressing enter will move to the next Textfield (tfHeight)
+        // Pressing enter will move to the next TextField (tfHeight)
         tfWeight.setOnKeyPressed(event -> {
                     if (event.getCode().equals(KeyCode.ENTER)) {
-                        tfHeight.requestFocus();
+                        tfHeight.requestFocus(); // goes back to height TextField
                     }
                 }
         );
@@ -239,12 +269,12 @@ public class Main extends Application {
         EventHandler<ActionEvent> resetButtonPress = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                errorLabel.setText(""); //clear error label
-                finalResult.setText(""); //clear height text field
-                bmiMessage.setText(""); //clear status
-                tfWeight.setText(""); //clear weight text field
-                tfHeight.setText(""); //clear height text field
-                tfWeight.requestFocus(); //refocus at weight text field
+                errorLabel.setText("");  // clear errorLabel
+                finalResult.setText(""); // clear height TextField
+                bmiMessage.setText("");  // clear bmiMessage text
+                tfWeight.setText("");    // clear weight TextField
+                tfHeight.setText("");    // clear height TextField
+                tfWeight.requestFocus(); // goes back at weight TextField
 
             }
         };
@@ -259,7 +289,6 @@ public class Main extends Application {
         // End of Event settings for buttons
 
         Scene scene = new Scene(pane, windowWidth, windowHeight);
-        //Parent root = FXMLLoader.load(getClass().getResource("BMI.fxml"));
         primaryStage.setTitle("BMI Calculator");
         primaryStage.getIcons().add(new Image("BMI_APP/bmiIcon.png"));
         primaryStage.setResizable(false);
@@ -273,30 +302,30 @@ public class Main extends Application {
      * Calculates the BMI from user input using Imperial System Formula.
      */
     public Double calculateBMI(Double weight, Double height) {
-        return weight / (height * height) * 703.0; //703 conversion factor for imperial
+        return weight / (height * height) * 703.0; // 703 conversion factor for imperial
     }
 
     /**
-     * Converts KG to Lbs as the formula is for imperial system
+     * Converts KG to Lbs because the formula is for Imperial System
      */
     public Double convertKgToLbs(Double kg) {
-        return kg * 2.20462262; //1 KG = 2.20462262 lbs
+        return kg * 2.20462262; // 1 KG = 2.20462262 lbs
     }
 
     /**
-     * Converts CM to Inches as the formula is for imperial system.
+     * Converts CM to Inches because the formula is for Imperial System.
      */
     public Double convertCmToIn(Double cm) {
-        return cm * 0.393701;  //1 CM = 0.393701 IN
+        return cm * 0.393701;  // 1 CM = 0.393701 IN
     }
 
     /**
-     * Accepts the bmi and displays corresponding messages to finalResult label
+     * Accepts the BMI and displays corresponding messages to finalResult label
      * and bmiMessage label in the middle of second half of the screen.
      */
     public void resultBMI(Double bmi, Label finalResult, Label bmiMessage) {
+        // display format to 1 decimal digit
         finalResult.setText(String.format("Your BMI is %-2.1f", bmi));
-        // finalResult.setText(bmi.toString());
         if (bmi < 18.5) {
             bmiMessage.setText("Your result suggests that you are underweight.");
         } else if (bmi >= 18.5 && bmi < 25) {
@@ -305,6 +334,11 @@ public class Main extends Application {
             bmiMessage.setText("Your result suggests you are overweight.");
         } else if (bmi > 30) {
             bmiMessage.setText("Your result suggests that you should skip your daily meetings with Ronald.");
+            // mouseover tooltip
+            Tooltip tooltip = new Tooltip();
+            tooltip.setGraphic(new ImageView("BMI_APP/9.jpg"));
+            bmiMessage.setTooltip(tooltip);
+
         }
     }
 }
