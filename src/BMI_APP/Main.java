@@ -21,23 +21,13 @@ import javafx.stage.Stage;
 /**
  * BMI Calculator application created in JavaFX.
  * Created non-standard for educational purposes without FXML/Scene Builder - Gluon.
- * Excuse me for the CSS, it should have been in a separate file but I ran out of time.
- * Find the Halloween Egg.
 
- *  Name:          Ioannis Lafazanis
- *  Student ID:    21425229
- *  Course Code:   CP40061E - Programming
- *  Date:          11/01/2020
- *  Project Name:  Practical Activity 2
- *  Module Leader: Dr Ikram Ur Rehman
- *  Time Spent:    30-35 hours counted by RescueTime
  *
  * Made on OpenJDK14.
  * Please download "javafx-sdk-11.0" and add all the jar-files in
  * Javafx-sdk-11.0.2\lib\ to the global library.
  * VM options --module-path %java path% --add-modules javafx.controls,javafx.fxml
  *
- * Thank you for your patience.
  */
 
 public class Main extends Application {
@@ -192,7 +182,7 @@ public class Main extends Application {
 
         // Event handler for the calculateButton
         EventHandler<ActionEvent> calculateButtonPress = Event -> {
-            errorLabel.setText(""); //clear error label
+            errorLabel.setText(""); // clear error label
             // to control displaying of large decimals on unrealistic/incorrect weight/height inputs that take space
             boolean proceed = true;
             try {
@@ -327,11 +317,8 @@ public class Main extends Application {
         } else if (bmi >= 25 && bmi < 30) {
             bmiMessage.setText("Your result suggests you are overweight.");
         } else if (bmi > 30) {
-            bmiMessage.setText("Your result suggests that you should skip your daily meetings with Ronald.");
-            // mouseover tooltip
-            Tooltip tooltip = new Tooltip();
-            tooltip.setGraphic(new ImageView("BMI_APP/9.jpg"));
-            bmiMessage.setTooltip(tooltip);
+            bmiMessage.setText("Your result suggest that you are obese.");
+
 
         }
     }
