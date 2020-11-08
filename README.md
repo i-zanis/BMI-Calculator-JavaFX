@@ -1,2 +1,2 @@
 # JavaFX-BMI-Calculator
-![Screenshot](https://github.com/i-zanis/JavaFX-BMI-Calculator/blob/master/appScreenShot.png.png)
+![Screenshot](https://github.com/i-zanis/JavaFX-BMI-Calculator/blob/master/appScreenShot.png)
