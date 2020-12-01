@@ -21,12 +21,11 @@ import javafx.stage.Stage;
  * BMI Calculator application created in JavaFX.
  * Created non-standard for educational purposes without FXML/Scene Builder - Gluon.
 
- *
- * Made on OpenJDK14.
- * Please download "javafx-sdk-11.0" and add all the jar-files in
+ * Made in Java 14.0.2.
+ * If the Program does not work please download "javafx-sdk-11.0" and add all the jar-files in
  * Javafx-sdk-11.0.2\lib\ to the global library.
- * VM options --module-path %java path% --add-modules javafx.controls,javafx.fxml
  *
+ * VM options --module-path %java path% --add-modules javafx.controls,javafx.fxml
  */
 
 public class Main extends Application {
@@ -259,7 +258,6 @@ public class Main extends Application {
             tfWeight.setText("");    // clear weight TextField
             tfHeight.setText("");    // clear height TextField
             tfWeight.requestFocus(); // goes back at weight TextField
-
         };
 
         // Setting event source objects
@@ -277,8 +275,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
 
     /**
