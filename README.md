@@ -1,4 +1,4 @@
-# JavaFX-BMI-Calculator
+# BMI-Calculator-JavaFX
 ![Screenshot](appScreenShot.png)
 
  * BMI Calculator application created in JavaFX.
